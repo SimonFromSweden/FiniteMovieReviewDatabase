@@ -4,6 +4,7 @@ using FiniteMovieReviewDatabase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FiniteMovieReviewDatabase.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240918134917_AddedNullability")]
+    partial class AddedNullability
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +51,7 @@ namespace FiniteMovieReviewDatabase.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("FiniteMovieReviewDatabase.Models.Dislike", b =>
@@ -71,7 +74,7 @@ namespace FiniteMovieReviewDatabase.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Dislikes");
+                    b.ToTable("Dislike");
                 });
 
             modelBuilder.Entity("FiniteMovieReviewDatabase.Models.Like", b =>
@@ -94,7 +97,7 @@ namespace FiniteMovieReviewDatabase.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("FiniteMovieReviewDatabase.Models.Movie", b =>
@@ -114,9 +117,6 @@ namespace FiniteMovieReviewDatabase.Data.Migrations
                     b.Property<string>("IMDBLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImgUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ReleaseYear")
                         .HasColumnType("int");
 
@@ -128,7 +128,7 @@ namespace FiniteMovieReviewDatabase.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

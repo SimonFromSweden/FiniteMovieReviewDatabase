@@ -22,7 +22,7 @@ namespace FiniteMovieReviewDatabase.Controllers
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Comment.Include(c => c.Movie).Include(c => c.User);
+            var applicationDbContext = _context.Comments.Include(c => c.Movie).Include(c => c.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
+            var comment = await _context.Comments
                 .Include(c => c.Movie)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -80,7 +80,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment.FindAsync(id);
+            var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
+            var comment = await _context.Comments
                 .Include(c => c.Movie)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -152,10 +152,10 @@ namespace FiniteMovieReviewDatabase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var comment = await _context.Comment.FindAsync(id);
+            var comment = await _context.Comments.FindAsync(id);
             if (comment != null)
             {
-                _context.Comment.Remove(comment);
+                _context.Comments.Remove(comment);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +164,7 @@ namespace FiniteMovieReviewDatabase.Controllers
 
         private bool CommentExists(int id)
         {
-            return _context.Comment.Any(e => e.Id == id);
+            return _context.Comments.Any(e => e.Id == id);
         }
     }
 }

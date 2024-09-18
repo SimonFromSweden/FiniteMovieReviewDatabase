@@ -22,7 +22,7 @@ namespace FiniteMovieReviewDatabase.Controllers
         // GET: Dislikes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Dislike.Include(d => d.Movie).Include(d => d.User);
+            var applicationDbContext = _context.Dislikes.Include(d => d.Movie).Include(d => d.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var dislike = await _context.Dislike
+            var dislike = await _context.Dislikes
                 .Include(d => d.Movie)
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -80,7 +80,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var dislike = await _context.Dislike.FindAsync(id);
+            var dislike = await _context.Dislikes.FindAsync(id);
             if (dislike == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var dislike = await _context.Dislike
+            var dislike = await _context.Dislikes
                 .Include(d => d.Movie)
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -152,10 +152,10 @@ namespace FiniteMovieReviewDatabase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dislike = await _context.Dislike.FindAsync(id);
+            var dislike = await _context.Dislikes.FindAsync(id);
             if (dislike != null)
             {
-                _context.Dislike.Remove(dislike);
+                _context.Dislikes.Remove(dislike);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +164,7 @@ namespace FiniteMovieReviewDatabase.Controllers
 
         private bool DislikeExists(int id)
         {
-            return _context.Dislike.Any(e => e.Id == id);
+            return _context.Dislikes.Any(e => e.Id == id);
         }
     }
 }

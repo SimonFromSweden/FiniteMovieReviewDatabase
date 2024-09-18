@@ -8,10 +8,10 @@ namespace FiniteMovieReviewDatabase.Models
 
         // Foreign keys
         public int MovieId { get; set; }
-        public string UserId { get; set; }  // using IdentityUser
+        public string? UserId { get; set; }  // using IdentityUser
 
         // Navigation properties
-        public Movie Movie { get; set; }
-        public IdentityUser User { get; set; }
+        public Movie? Movie { get; set; }
+        public IdentityUser? User { get; set; }
     }
 }

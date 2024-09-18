@@ -30,6 +30,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.TrailerLink)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImgUrl)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -54,6 +57,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TrailerLink)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImgUrl)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

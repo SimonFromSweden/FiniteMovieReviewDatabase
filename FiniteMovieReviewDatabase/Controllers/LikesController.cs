@@ -22,7 +22,7 @@ namespace FiniteMovieReviewDatabase.Controllers
         // GET: Likes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Like.Include(l => l.Movie).Include(l => l.User);
+            var applicationDbContext = _context.Likes.Include(l => l.Movie).Include(l => l.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var like = await _context.Like
+            var like = await _context.Likes
                 .Include(l => l.Movie)
                 .Include(l => l.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -80,7 +80,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var like = await _context.Like.FindAsync(id);
+            var like = await _context.Likes.FindAsync(id);
             if (like == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace FiniteMovieReviewDatabase.Controllers
                 return NotFound();
             }
 
-            var like = await _context.Like
+            var like = await _context.Likes
                 .Include(l => l.Movie)
                 .Include(l => l.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -152,10 +152,10 @@ namespace FiniteMovieReviewDatabase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var like = await _context.Like.FindAsync(id);
+            var like = await _context.Likes.FindAsync(id);
             if (like != null)
             {
-                _context.Like.Remove(like);
+                _context.Likes.Remove(like);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +164,7 @@ namespace FiniteMovieReviewDatabase.Controllers
 
         private bool LikeExists(int id)
         {
-            return _context.Like.Any(e => e.Id == id);
+            return _context.Likes.Any(e => e.Id == id);
         }
     }
 }

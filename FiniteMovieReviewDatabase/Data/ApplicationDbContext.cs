@@ -10,9 +10,9 @@ namespace FiniteMovieReviewDatabase.Data
             : base(options)
         {
         }
-        public DbSet<FiniteMovieReviewDatabase.Models.Comment> Comment { get; set; } = default!;
-        public DbSet<FiniteMovieReviewDatabase.Models.Dislike> Dislike { get; set; } = default!;
-        public DbSet<FiniteMovieReviewDatabase.Models.Like> Like { get; set; } = default!;
-        public DbSet<FiniteMovieReviewDatabase.Models.Movie> Movie { get; set; } = default!;
+        public DbSet<FiniteMovieReviewDatabase.Models.Comment> Comments { get; set; } = default!;
+        public DbSet<FiniteMovieReviewDatabase.Models.Dislike> Dislikes { get; set; } = default!;
+        public DbSet<FiniteMovieReviewDatabase.Models.Like> Likes { get; set; } = default!;
+        public DbSet<FiniteMovieReviewDatabase.Models.Movie> Movies { get; set; } = default!;
     }
 }
