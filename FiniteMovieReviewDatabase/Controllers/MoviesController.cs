@@ -19,8 +19,15 @@ namespace FiniteMovieReviewDatabase.Controllers
             _context = context;
         }
 
-        // GET: Movies
-        public async Task<IActionResult> Index()
+		// GET: Movies/Grid
+		public IActionResult Grid()
+		{
+			var movies = _context.Movies.ToList();  // Fetch the movies from the database
+			return View(movies);
+		}
+
+		// GET: Movies
+		public async Task<IActionResult> Index()
         {
             return View(await _context.Movies.ToListAsync());
         }
@@ -54,7 +61,7 @@ namespace FiniteMovieReviewDatabase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,ReleaseYear,Category,IMDBLink,TrailerLink")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,ReleaseYear,Category,IMDBLink,TrailerLink,ImgUrl")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +93,7 @@ namespace FiniteMovieReviewDatabase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ReleaseYear,Category,IMDBLink,TrailerLink")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ReleaseYear,Category,IMDBLink,TrailerLink,ImgUrl")] Movie movie)
         {
             if (id != movie.Id)
             {
