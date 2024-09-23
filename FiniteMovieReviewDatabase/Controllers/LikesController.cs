@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FiniteMovieReviewDatabase.Data;
 using FiniteMovieReviewDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FiniteMovieReviewDatabase.Controllers
 {
@@ -46,8 +48,55 @@ namespace FiniteMovieReviewDatabase.Controllers
             return View(like);
         }
 
-        // GET: Likes/Create
-        public IActionResult Create()
+		// POST: Likes/AddLike
+		[Authorize]
+		[HttpPost]
+		public async Task<ActionResult> AddLike([FromBody] int movieId)
+		{
+			Console.WriteLine($"Received movieId: {movieId}");
+
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Find userId
+
+            // Get all the liked movies
+			var likedMovies = await _context.Likes 
+									.Where(c => c.UserId == userId)
+									.Include(c => c.Movie)
+									.ToListAsync();
+
+			var movieToLike = likedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie is already liked or not
+
+			var dislikeExists = await _context.Dislikes.FindAsync(movieId); // Find if the movie already has a dislike or not
+
+			if (movieToLike != null)
+			{
+				if (dislikeExists != null )
+				{
+					// Remove dislike from movie
+					_context.Dislikes.Remove(dislikeExists);
+					await _context.SaveChangesAsync();
+					return Json(new { success = true, message = "Dislike removed, like the movie again in order to add a like!" });
+				}
+				else
+				{
+					return Json(new { success = true, message = "You have already liked this movie!" });
+				}
+			}
+			else
+			{
+					var newLike = new Like
+					{
+						UserId = userId,
+						MovieId = movieId,
+					};
+
+					_context.Likes.Add(newLike);
+					await _context.SaveChangesAsync();
+				    return Json(new { success = true, message = "Like added to movie!" });
+			}			
+		}
+
+		// GET: Likes/Create
+		public IActionResult Create()
         {
             ViewData["MovieId"] = new SelectList(_context.Set<Movie>(), "Id", "Id");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");

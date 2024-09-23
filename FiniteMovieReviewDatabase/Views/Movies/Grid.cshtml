@@ -8,22 +8,92 @@
 		@if(Model != null){
 			@foreach (var movie in Model)
 			{
-				<div class=" col-md-4 col-sm-6 col-lg-3 mb-4">
+				<div class="col-md-4 col-sm-6 col-lg-3 mb-5">
 					<div class="card h-100 d-flex flex-column justify-content-center align-content-center" style="background-image: url('/images/movie-frame.jpeg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-						<div class="iframe-container text-center ps-1 " style="position: relative; padding-bottom: 56.25%; top: 10%; left: 6%; width: 87%; overflow: hidden; background-color: #FFFFFF;">
-									<iframe src="@movie.TrailerLink"
-											frameborder="0"
-											allowfullscreen
-											style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
-								</div>
+						<img src="@movie.ImgUrl" width="76%" class="position-relative" style="left: 12%; top: 15%;"/>
 						<a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="text-decoration-none link-secondary">
-							<div class="card-body fw-bold text-center mt-1">
+							<div class="card-body text-black fw-bold text-center pt-3 font-monospace position-relative" style="top: 10px;">
 								@movie.Title
 							</div>
 						</a>	
+					</div>
+					<div class="d-flex justify-content-between mt-1 ">
+@* 						<a asp-controller="Likes" asp-action="create" asp-route-id="@movie.Id"> *@
+						<div class="d-flex flex-row">
+							<button class="btn btn-default" onclick="handleLike(@movie.Id)">
+								<img src="~/images/thumbs-up.jpg" width="20px;" class="ms-2"  />
+							</button>
+							<p class="fw-bold position-relative" style="top: 6px; left: 3px;">5</p>
+						</div>
+
+@* 						<a asp-controller="Dislikes" asp-action="create" asp-route-id="@movie.Id"> *@
+						<div class="d-flex flex-row">
+							<p class="fw-bold position-relative" style="top: 6px; right: 3px;">5</p>
+							<button class="btn btn-default" onclick="handleDislike(@movie.Id)">
+								<img src="images/thumbs-down.png" width="20px;" class="me-2" />
+							</button>
+						</div>
 					</div>
 				</div>
 			}
 		}
 	</div>
 </div>
+<script>
+	function handleLike(movieId) {
+		let movieInDb = false;
+		const movies = @Html.Raw(Json.Serialize(Model));
+		for (let movie of movies) {
+			if (movie.id === parseInt(movieId)) { // If disc exists in disc table, let discInDb be true
+				movieInDb = true;
+				break;
+			}
+		}
+		if (movieInDb) {
+			//JQuery sending discId to Add to cart-function
+			$.ajax({
+				type: 'POST',
+				url: '/Likes/AddLike/',
+				data: JSON.stringify(movieId), // Convert to JSON if your server expects it
+				contentType: 'application/json', // Sending as JSON
+				dataType: 'json', // Expecting JSON response from server
+				success: function (data) {
+					alert(data.message || "Like added to movie!");
+					window.location.reload();
+				},
+				error: function (xhr, status, error) {
+					console.error("Error:", xhr.responseText);
+				}
+			});
+		}
+	}
+
+	function handleDislike(movieId) {
+		let movieInDb = false;
+		const movies = @Html.Raw(Json.Serialize(Model));
+		for (let movie of movies) {
+			if (movie.id === parseInt(movieId)) { // If disc exists in disc table, let discInDb be true
+				movieInDb = true;
+				break;
+			}
+		}
+		if (movieInDb) {
+			//JQuery sending discId to Add to cart-function
+			$.ajax({
+				type: 'POST',
+				url: '/Dislikes/AddDislike/',
+				data: JSON.stringify(movieId), // Convert to JSON if your server expects it
+				contentType: 'application/json', // Sending as JSON
+				dataType: 'json', // Expecting JSON response from server
+				success: function (data) {
+					alert(data.message || "Dislike added to movie!");
+					window.location.reload();
+				},
+				error: function (xhr, status, error) {
+					console.error("Error:", xhr.responseText);
+				}
+			});
+		}
+	}
+
+</script>
