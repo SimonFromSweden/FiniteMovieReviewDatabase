@@ -62,26 +62,41 @@ namespace FiniteMovieReviewDatabase.Controllers
 									.Where(c => c.UserId == userId)
 									.Include(c => c.Movie)
 									.ToListAsync();
+			
+            // Get all the disliked movies
+			var dislikedMovies = await _context.Dislikes
+									.Where(c => c.UserId == userId)
+									.Include(c => c.Movie)
+									.ToListAsync();
 
-			var movieToLike = likedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie is already liked or not
+			var movieIsLiked = likedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie is already liked or not
 
-			var dislikeExists = await _context.Dislikes.FindAsync(movieId); // Find if the movie already has a dislike or not
+			var dislikeExists = dislikedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie already has a dislike or not
 
-			if (movieToLike != null)
+            // if movie is already liked, do this
+			if (movieIsLiked != null)
 			{
 				if (dislikeExists != null )
 				{
 					// Remove dislike from movie
 					_context.Dislikes.Remove(dislikeExists);
 					await _context.SaveChangesAsync();
-					return Json(new { success = true, message = "Dislike removed, like the movie again in order to add a like!" });
+					return Json(new { success = true, message = "Dislike removed, now you can add a like!" });
 				}
 				else
 				{
 					return Json(new { success = true, message = "You have already liked this movie!" });
 				}
 			}
-			else
+            // if movie is disliked, do this
+			else if (dislikeExists != null)
+            {
+				// Remove dislike from movie
+				_context.Dislikes.Remove(dislikeExists);
+				await _context.SaveChangesAsync();
+				return Json(new { success = true, message = "Dislike removed, now you can add a like!" });
+			}
+            else
 			{
 					var newLike = new Like
 					{

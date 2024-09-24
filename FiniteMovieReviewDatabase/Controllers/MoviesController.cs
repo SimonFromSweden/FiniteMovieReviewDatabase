@@ -20,9 +20,16 @@ namespace FiniteMovieReviewDatabase.Controllers
         }
 
 		// GET: Movies/Grid
-		public IActionResult Grid()
+		public async Task<IActionResult> Grid()
 		{
-			var movies = _context.Movies.ToList();  // Fetch the movies from the database
+
+			var movies = await _context.Movies.Include(m => m.Likes).Include(m => m.Dislikes).ToListAsync();  // Fetch the movies from the database
+
+            movies = movies
+                .OrderByDescending(m => m.Likes?.Count ?? 0) // Treat likes as 0 if null
+                .ThenBy(m => m.Dislikes?.Count ?? 0) // Treat dislikes as 0 if null
+				.ThenBy(m => m.ReleaseYear)
+                .ToList();
 			return View(movies);
 		}
 

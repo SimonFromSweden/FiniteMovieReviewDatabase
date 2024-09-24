@@ -9,26 +9,26 @@
 			@foreach (var movie in Model)
 			{
 				<div class="col-md-4 col-sm-6 col-lg-3 mb-5">
-					<div class="card h-100 d-flex flex-column justify-content-center align-content-center" style="background-image: url('/images/movie-frame.jpeg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+					<div class="card h-100 d-flex flex-column justify-content-center align-content-center" style="background-image: url('/images/movie-frame.jpeg'); background-size: contain; background-repeat: no-repeat; background-position: center;">
 						<img src="@movie.ImgUrl" width="76%" class="position-relative" style="left: 12%; top: 15%;"/>
 						<a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="text-decoration-none link-secondary">
-							<div class="card-body text-black fw-bold text-center pt-3 font-monospace position-relative" style="top: 10px;">
+							<div class="card-body text-black fw-bold text-center pt-3 font-monospace position-relative" style="top: 12px;">
 								@movie.Title
 							</div>
 						</a>	
 					</div>
-					<div class="d-flex justify-content-between mt-1 ">
+					<div class="d-flex justify-content-between" style="background-color: lightgray; border-radius: 0.5;">
 @* 						<a asp-controller="Likes" asp-action="create" asp-route-id="@movie.Id"> *@
 						<div class="d-flex flex-row">
 							<button class="btn btn-default" onclick="handleLike(@movie.Id)">
-								<img src="~/images/thumbs-up.jpg" width="20px;" class="ms-2"  />
+								<img src="~/images/thumbs-up.png" width="20px;" class="ms-2"  />
 							</button>
-							<p class="fw-bold position-relative" style="top: 6px; left: 3px;">5</p>
+							<p class="fw-bold position-relative" style="top: 9px; left: 3px;">@movie.Likes.Count()</p>
 						</div>
 
 @* 						<a asp-controller="Dislikes" asp-action="create" asp-route-id="@movie.Id"> *@
 						<div class="d-flex flex-row">
-							<p class="fw-bold position-relative" style="top: 6px; right: 3px;">5</p>
+							<p class="fw-bold position-relative" style="top: 9px; right: 3px;">@movie.Dislikes.Count()</p>
 							<button class="btn btn-default" onclick="handleDislike(@movie.Id)">
 								<img src="images/thumbs-down.png" width="20px;" class="me-2" />
 							</button>
@@ -41,14 +41,10 @@
 </div>
 <script>
 	function handleLike(movieId) {
-		let movieInDb = false;
+		let movieInDb = true;
+		console.log("Serialized Movies:", @Html.Raw(Json.Serialize(Model)));
 		const movies = @Html.Raw(Json.Serialize(Model));
-		for (let movie of movies) {
-			if (movie.id === parseInt(movieId)) { // If disc exists in disc table, let discInDb be true
-				movieInDb = true;
-				break;
-			}
-		}
+
 		if (movieInDb) {
 			//JQuery sending discId to Add to cart-function
 			$.ajax({
@@ -62,21 +58,22 @@
 					window.location.reload();
 				},
 				error: function (xhr, status, error) {
-					console.error("Error:", xhr.responseText);
+					if (xhr.status === 401) {
+						alert("Only logged in users can like or dislike movies");
+					} else {
+						console.error("Error:", xhr.responseText);
+						alert("An error occurred: " + error);
+					}
 				}
 			});
 		}
 	}
 
 	function handleDislike(movieId) {
-		let movieInDb = false;
+		let movieInDb = true;
+		console.log("Serialized Movies:", @Html.Raw(Json.Serialize(Model)));
 		const movies = @Html.Raw(Json.Serialize(Model));
-		for (let movie of movies) {
-			if (movie.id === parseInt(movieId)) { // If disc exists in disc table, let discInDb be true
-				movieInDb = true;
-				break;
-			}
-		}
+		
 		if (movieInDb) {
 			//JQuery sending discId to Add to cart-function
 			$.ajax({
@@ -90,10 +87,14 @@
 					window.location.reload();
 				},
 				error: function (xhr, status, error) {
-					console.error("Error:", xhr.responseText);
+					if (xhr.status === 401) {
+						alert("Only logged in users can like or dislike movies!");
+					} else {
+						console.error("Error:", xhr.responseText);
+						alert("An error occurred: " + error);
+					}
 				}
 			});
 		}
 	}
-
 </script>

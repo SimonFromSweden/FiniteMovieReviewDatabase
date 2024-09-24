@@ -63,11 +63,17 @@ namespace FiniteMovieReviewDatabase.Controllers
 									.Include(c => c.Movie)
 									.ToListAsync();
 
-			var movieToDislike = likedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie is already liked or not
+			// Get all the disliked movies
+			var dislikedMovies = await _context.Dislikes
+									.Where(c => c.UserId == userId)
+									.Include(c => c.Movie)
+									.ToListAsync();
 
-			var likeExists = await _context.Likes.FindAsync(movieId); // Find if the movie already has a like or not
+			var movieIsDisliked = dislikedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie is already liked or not
 
-			if (movieToDislike != null)
+			var likeExists = likedMovies.FirstOrDefault(c => c.MovieId == movieId); // Find if the movie already has a like or not
+
+			if (movieIsDisliked != null)
 			{
 				if (likeExists != null)
 				{
@@ -80,6 +86,13 @@ namespace FiniteMovieReviewDatabase.Controllers
 				{
 					return Json(new { success = true, message = "You have already disliked this movie!" });
 				}
+			}
+            else if (likeExists != null)
+            {
+				// Remove dislike from movie
+				_context.Likes.Remove(likeExists);
+				await _context.SaveChangesAsync();
+				return Json(new { success = true, message = "Dislike removed, now you can add a like!" });
 			}
 			else
 			{

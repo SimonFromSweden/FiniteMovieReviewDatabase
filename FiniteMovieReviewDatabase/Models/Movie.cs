@@ -12,9 +12,9 @@
         public string? ImgUrl { get; set; }
 
         // Navigation properties
-        public ICollection<Like>? Likes { get; set; }
-        public ICollection<Dislike>? Dislikes { get; set; }
-        public ICollection<Comment>? Comments { get; set; }
+        public ICollection<Like>? Likes { get; set; } = new List<Like>();
+        public ICollection<Dislike>? Dislikes { get; set; } = new List<Dislike>();
+        public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
 
     }
 }
