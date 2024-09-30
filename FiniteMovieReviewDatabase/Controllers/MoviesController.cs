@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FiniteMovieReviewDatabase.Data;
 using FiniteMovieReviewDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FiniteMovieReviewDatabase.Controllers
 {
@@ -33,6 +34,7 @@ namespace FiniteMovieReviewDatabase.Controllers
 			return View(movies);
 		}
 
+		[Authorize(Roles = "Administrator")]
 		// GET: Movies
 		public async Task<IActionResult> Index()
         {
@@ -48,14 +50,34 @@ namespace FiniteMovieReviewDatabase.Controllers
             }
 
             var movie = await _context.Movies
+                .Include(m => m.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(movie);
+            var comments = await _context.Comments
+            .Where(c => c.MovieId == movie.Id)
+            .ToListAsync();
+
+            var viewModel = new MovieDetailsViewModel
+            {
+                Movie = movie,
+                Comments = comments,
+                NewComment = new Comment() // Initialize a new comment
+            };
+
+            return View(viewModel);
         }
+
+        // GET: Movies/About
+        public IActionResult About()
+        {
+            return View();
+        }
+
 
         // GET: Movies/Create
         public IActionResult Create()

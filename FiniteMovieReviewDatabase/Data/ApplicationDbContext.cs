@@ -14,5 +14,5 @@ namespace FiniteMovieReviewDatabase.Data
         public DbSet<FiniteMovieReviewDatabase.Models.Dislike> Dislikes { get; set; } = default!;
         public DbSet<FiniteMovieReviewDatabase.Models.Like> Likes { get; set; } = default!;
         public DbSet<FiniteMovieReviewDatabase.Models.Movie> Movies { get; set; } = default!;
-    }
+  }
 }

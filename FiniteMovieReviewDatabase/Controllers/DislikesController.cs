@@ -21,8 +21,9 @@ namespace FiniteMovieReviewDatabase.Controllers
             _context = context;
         }
 
-        // GET: Dislikes
-        public async Task<IActionResult> Index()
+		[Authorize(Roles = "Administrator")]
+		// GET: Dislikes
+		public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Dislikes.Include(d => d.Movie).Include(d => d.User);
             return View(await applicationDbContext.ToListAsync());
@@ -92,7 +93,7 @@ namespace FiniteMovieReviewDatabase.Controllers
 				// Remove dislike from movie
 				_context.Likes.Remove(likeExists);
 				await _context.SaveChangesAsync();
-				return Json(new { success = true, message = "Dislike removed, now you can add a like!" });
+				return Json(new { success = true, message = "Like removed, now you can add a dislike!" });
 			}
 			else
 			{

@@ -21,8 +21,9 @@ namespace FiniteMovieReviewDatabase.Controllers
             _context = context;
         }
 
-        // GET: Likes
-        public async Task<IActionResult> Index()
+		[Authorize(Roles = "Administrator")]
+		// GET: Likes
+		public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Likes.Include(l => l.Movie).Include(l => l.User);
             return View(await applicationDbContext.ToListAsync());
