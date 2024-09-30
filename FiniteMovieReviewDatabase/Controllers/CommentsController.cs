@@ -86,8 +86,6 @@ namespace FiniteMovieReviewDatabase.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Movies", new { id = comment.MovieId });
             }
-            //ViewData["MovieId"] = new SelectList(_context.Set<Movie>(), "Id", "Id", comment.MovieId);
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return RedirectToAction("Details", "Movies", new { id = comment.MovieId });
         }
 
